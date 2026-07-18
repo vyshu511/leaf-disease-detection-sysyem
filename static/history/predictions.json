@@ -38,5 +38,15 @@
     "is_healthy": false,
     "is_unknown": false,
     "timestamp": "2026-07-18T04:37:04.121197Z"
+  },
+  {
+    "id": "bd787eea4b",
+    "image_url": "/static/uploads/41087eb3f7_0a47f32c-1724-4c8d-bfe4-986cedd3587b___RS_Early.B_8001.JPG",
+    "prediction": "Potato Early blight",
+    "confidence": 92.61,
+    "reliability": "High",
+    "is_healthy": false,
+    "is_unknown": false,
+    "timestamp": "2026-07-18T04:47:11.286230Z"
   }
 ]
