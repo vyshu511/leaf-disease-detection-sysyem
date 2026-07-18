@@ -1,0 +1,42 @@
+[
+  {
+    "id": "5b9a1e2fb5",
+    "image_url": "/static/uploads/c6c7b13732_00fc2ee5-729f-4757-8aeb-65c3355874f2___RS_HL_1864_90deg.JPG",
+    "prediction": "Potato healthy",
+    "confidence": 99.53,
+    "reliability": "High",
+    "is_healthy": true,
+    "is_unknown": false,
+    "timestamp": "2026-07-18T04:29:59.085093Z"
+  },
+  {
+    "id": "704d913998",
+    "image_url": "/static/uploads/f4db3b0bb3_1ee04a42-fa1c-4f6b-a88b-4cf583b188ea___RS_Early.B_8494.JPG",
+    "prediction": "Potato Early blight",
+    "confidence": 93.6,
+    "reliability": "High",
+    "is_healthy": false,
+    "is_unknown": false,
+    "timestamp": "2026-07-18T04:32:52.975840Z"
+  },
+  {
+    "id": "16e20bd1cb",
+    "image_url": "/static/uploads/43151058b1_0a79700b-f834-41f5-ae51-6ceda6f67a48___RS_Early.B_8951.JPG",
+    "prediction": "Potato Early blight",
+    "confidence": 99.88,
+    "reliability": "High",
+    "is_healthy": false,
+    "is_unknown": false,
+    "timestamp": "2026-07-18T04:34:06.718334Z"
+  },
+  {
+    "id": "65f45ce9de",
+    "image_url": "/static/uploads/9992e90e6c_0a8a68ee-f587-4dea-beec-79d02e7d3fa4___RS_Early.B_8461.JPG",
+    "prediction": "Potato Early blight",
+    "confidence": 85.82,
+    "reliability": "High",
+    "is_healthy": false,
+    "is_unknown": false,
+    "timestamp": "2026-07-18T04:37:04.121197Z"
+  }
+]
