@@ -4,17 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LeafScope — Plant Disease Detection</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
-/* ==========================================================================
-   Design tokens
-   Palette: deep canopy green, sage, soil brown, warm parchment, healthy-lime,
-            alert amber, disease-red — an agronomy field-notebook feel rather
-            than a generic SaaS dashboard.
-   Type: "Fraunces" (display, an organic serif with real personality) paired
-         with "Inter" (body/UI) and "JetBrains Mono" (data/readouts).
-   ========================================================================== */
 :root {
   --canopy-900: #14261f;
   --canopy-800: #1b4332;
@@ -28,7 +20,6 @@
   --parchment-100: #efece2;
   --ink-900: #1c211d;
   --ink-600: #565f58;
-
   --bg: var(--parchment-50);
   --bg-panel: #ffffff;
   --bg-sunken: var(--parchment-100);
@@ -37,22 +28,17 @@
   --border: #e2ddce;
   --accent: var(--canopy-800);
   --accent-soft: var(--sage-400);
-
   --radius-sm: 8px;
   --radius-md: 14px;
   --radius-lg: 22px;
-
   --shadow-sm: 0 1px 2px rgba(20, 38, 31, 0.06);
   --shadow-md: 0 8px 24px rgba(20, 38, 31, 0.10);
   --shadow-lg: 0 16px 48px rgba(20, 38, 31, 0.16);
-
   --font-display: "Fraunces", "Georgia", serif;
   --font-body: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: "JetBrains Mono", "SFMono-Regular", monospace;
-
   --transition: 180ms cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 [data-theme="dark"] {
   --bg: #10130f;
   --bg-panel: #191d17;
@@ -66,11 +52,8 @@
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.55);
 }
-
 * { box-sizing: border-box; }
-
 html { scroll-behavior: smooth; }
-
 body {
   margin: 0;
   font-family: var(--font-body);
@@ -79,24 +62,19 @@ body {
   transition: background var(--transition), color var(--transition);
   min-height: 100vh;
 }
-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
-
-/* ---------- Layout shell ---------- */
 .app-shell {
   display: grid;
   grid-template-columns: 240px 1fr;
   min-height: 100vh;
 }
-
 @media (max-width: 900px) {
   .app-shell { grid-template-columns: 1fr; }
   .sidebar { display: none; }
   .sidebar.mobile-open { display: flex; }
 }
-
 .sidebar {
   background: var(--canopy-900);
   color: var(--parchment-50);
@@ -108,7 +86,6 @@ body {
   top: 0;
   height: 100vh;
 }
-
 .brand {
   display: flex;
   align-items: center;
@@ -118,14 +95,12 @@ body {
   font-weight: 600;
   letter-spacing: -0.01em;
 }
-
 .brand-mark {
-  width: 34px; height: 34px;
+  width: 34px;
+  height: 34px;
   flex-shrink: 0;
 }
-
 .nav-group { display: flex; flex-direction: column; gap: 4px; }
-
 .nav-eyebrow {
   font-size: 0.7rem;
   text-transform: uppercase;
@@ -133,7 +108,6 @@ body {
   color: var(--sage-400);
   margin: 18px 0 6px 10px;
 }
-
 .nav-link {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 12px;
@@ -151,21 +125,17 @@ body {
   color: #fff;
 }
 .nav-link.active { box-shadow: inset 3px 0 0 var(--lime-500); }
-
 .sidebar-footer {
   margin-top: auto;
   font-size: 0.78rem;
   color: rgba(248, 246, 240, 0.5);
   line-height: 1.5;
 }
-
-/* ---------- Main column ---------- */
 .main {
   padding: 28px clamp(20px, 4vw, 48px) 64px;
   max-width: 1180px;
   width: 100%;
 }
-
 .topbar {
   display: flex;
   align-items: center;
@@ -173,7 +143,6 @@ body {
   gap: 16px;
   margin-bottom: 28px;
 }
-
 .topbar h1 {
   font-family: var(--font-display);
   font-size: clamp(1.5rem, 2.4vw, 2.1rem);
@@ -186,9 +155,7 @@ body {
   font-size: 0.95rem;
   margin-top: 4px;
 }
-
 .topbar-actions { display: flex; align-items: center; gap: 10px; }
-
 .icon-btn {
   width: 40px; height: 40px;
   display: flex; align-items: center; justify-content: center;
@@ -204,8 +171,6 @@ body {
   outline: 2px solid var(--accent-soft);
   outline-offset: 2px;
 }
-
-/* ---------- Panels / cards ---------- */
 .panel {
   background: var(--bg-panel);
   border: 1px solid var(--border);
@@ -213,7 +178,6 @@ body {
   box-shadow: var(--shadow-sm);
   padding: 24px;
 }
-
 .grid-2 {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
@@ -221,8 +185,6 @@ body {
   align-items: start;
 }
 @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
-
-/* ---------- Upload / dropzone ---------- */
 .dropzone {
   border: 2px dashed var(--sage-400);
   border-radius: var(--radius-md);
@@ -238,19 +200,16 @@ body {
   background: color-mix(in srgb, var(--lime-500) 8%, var(--bg-sunken));
 }
 .dropzone.dragover { transform: scale(1.01); }
-
 .dropzone svg { width: 46px; height: 46px; color: var(--sage-600); margin-bottom: 10px; }
 .dropzone-title { font-family: var(--font-display); font-size: 1.05rem; font-weight: 600; }
 .dropzone-hint { color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; }
 .dropzone input[type="file"] { display: none; }
-
 .preview-wrap {
   display: none;
   flex-direction: column;
   gap: 14px;
 }
 .preview-wrap.active { display: flex; }
-
 .preview-image-frame {
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -260,7 +219,6 @@ body {
   position: relative;
 }
 .preview-image-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
 .btn {
   font-family: var(--font-body);
   font-weight: 600;
@@ -278,8 +236,6 @@ body {
 .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; transform: none; box-shadow: none; }
 .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
 .btn-ghost:hover { background: var(--bg-sunken); }
-
-/* ---------- Loading ---------- */
 .loading-row {
   display: none;
   align-items: center;
@@ -297,11 +253,8 @@ body {
   animation: spin 0.8s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-/* ---------- Results ---------- */
 .result-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .result-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; }
-
 .badge {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 5px 12px;
@@ -317,7 +270,6 @@ body {
 [data-theme="dark"] .badge-high { color: var(--lime-500); }
 [data-theme="dark"] .badge-medium { color: var(--amber-500); }
 [data-theme="dark"] .badge-low { color: #e78078; }
-
 .confidence-bar-track {
   height: 10px;
   background: var(--bg-sunken);
@@ -332,13 +284,10 @@ body {
   width: 0%;
   transition: width 700ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-
 .top3-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.86rem; padding: 6px 0; border-bottom: 1px solid var(--border); }
 .top3-row:last-child { border-bottom: none; }
 .top3-name { color: var(--text); }
 .top3-conf { font-family: var(--font-mono); color: var(--text-muted); }
-
-/* Info accordion sections */
 .info-section { border-top: 1px solid var(--border); padding: 14px 0; }
 .info-section:first-child { border-top: none; }
 .info-section-title {
@@ -359,14 +308,11 @@ body {
 .info-section.open .info-section-body { display: block; }
 .info-section-body ul { margin: 0; padding-left: 18px; }
 .info-section-body li { margin-bottom: 4px; }
-
 .severity-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 .severity-low { background: var(--lime-500); }
 .severity-moderate { background: var(--amber-500); }
 .severity-high { background: var(--red-500); }
 .severity-unknown { background: var(--text-muted); }
-
-/* Grad-CAM toggle image swap */
 .gradcam-toggle { display: flex; gap: 8px; margin-top: 10px; }
 .gradcam-toggle button {
   flex: 1; padding: 8px; font-size: 0.8rem; border-radius: var(--radius-sm);
@@ -375,8 +321,6 @@ body {
 }
 .gradcam-toggle button.active { background: var(--accent); color: var(--parchment-50); border-color: var(--accent); }
 [data-theme="dark"] .gradcam-toggle button.active { color: var(--canopy-900); }
-
-/* ---------- History strip ---------- */
 .history-strip { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; }
 .history-item {
   flex: 0 0 auto; width: 90px;
@@ -390,8 +334,6 @@ body {
 .history-item:hover { transform: translateY(-2px); }
 .history-item img { width: 100%; height: 70px; object-fit: cover; display: block; }
 .history-item .h-label { font-size: 0.65rem; padding: 4px 6px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-/* ---------- Charts section ---------- */
 .charts-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -401,8 +343,6 @@ body {
 @media (max-width: 900px) { .charts-grid { grid-template-columns: 1fr; } }
 .chart-card canvas { max-height: 260px; }
 .chart-card h3 { font-family: var(--font-display); font-size: 1rem; margin: 0 0 12px; }
-
-/* ---------- Section heading with signature leaf-vein divider ---------- */
 .section-heading {
   display: flex; align-items: center; gap: 14px;
   margin: 40px 0 18px;
@@ -416,11 +356,8 @@ body {
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='10' viewBox='0 0 120 10'%3E%3Cpath d='M0 5 H120 M20 5 L26 1 M20 5 L26 9 M50 5 L56 1 M50 5 L56 9 M80 5 L86 1 M80 5 L86 9 M110 5 L116 1 M110 5 L116 9' stroke='%2384a98c' stroke-width='1' fill='none'/%3E%3C/svg%3E") repeat-x left center;
   opacity: 0.6;
 }
-
-/* Empty state */
 .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
 .empty-state svg { width: 56px; height: 56px; margin-bottom: 12px; opacity: 0.5; }
-
 .error-banner {
   background: color-mix(in srgb, var(--red-500) 12%, transparent);
   border: 1px solid color-mix(in srgb, var(--red-500) 35%, transparent);
@@ -431,20 +368,14 @@ body {
   margin-bottom: 18px;
 }
 [data-theme="dark"] .error-banner { color: #e78078; }
-
 .mobile-menu-btn { display: none; }
 @media (max-width: 900px) {
   .mobile-menu-btn { display: flex; }
 }
-
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
-
 <div class="app-shell">
-
-  <!-- Sidebar -->
   <aside class="sidebar" id="sidebar">
     <div class="brand">
       <svg class="brand-mark" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -453,7 +384,6 @@ body {
       </svg>
       <span>LeafScope</span>
     </div>
-
     <nav class="nav-group">
       <div class="nav-eyebrow">Diagnose</div>
       <button class="nav-link active" data-view="diagnose">
@@ -464,23 +394,18 @@ body {
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
         History
       </button>
-
       <div class="nav-eyebrow">Insights</div>
       <button class="nav-link" data-view="model">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-6 4 3 4-8"/></svg>
         Model Performance
       </button>
     </nav>
-
     <div class="sidebar-footer">
       MobileNetV2 transfer-learning model · 12 disease classes · Built for
       field diagnostics, not a substitute for an agronomist.
     </div>
   </aside>
-
-  <!-- Main -->
   <main class="main">
-
     <div class="topbar">
       <div>
         <h1>Leaf Disease Diagnostics</h1>
@@ -495,14 +420,9 @@ body {
         </button>
       </div>
     </div>
-
     <div id="errorBanner" class="error-banner" style="display:none;"></div>
-
-    <!-- DIAGNOSE VIEW -->
     <section id="view-diagnose">
       <div class="grid-2">
-
-        <!-- Upload panel -->
         <div class="panel">
           <div class="dropzone" id="dropzone">
             <input type="file" id="fileInput" accept="image/png, image/jpeg, image/webp">
@@ -510,7 +430,6 @@ body {
             <div class="dropzone-title">Drag &amp; drop a leaf photo</div>
             <div class="dropzone-hint">or click to browse · JPG, PNG, WEBP up to 8MB</div>
           </div>
-
           <div class="preview-wrap" id="previewWrap">
             <div class="preview-image-frame">
               <img id="previewImg" src="" alt="Leaf preview">
@@ -528,8 +447,6 @@ body {
             </div>
           </div>
         </div>
-
-        <!-- Results panel -->
         <div class="panel" id="resultsPanel">
           <div class="empty-state" id="emptyState">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -537,10 +454,7 @@ body {
           </div>
           <div id="resultContent" style="display:none;"></div>
         </div>
-
       </div>
-
-      <!-- History strip -->
       <div class="section-heading"><h2>Recent Scans</h2><div class="vein"></div></div>
       <div class="panel">
         <div class="history-strip" id="historyStrip">
@@ -548,16 +462,12 @@ body {
         </div>
       </div>
     </section>
-
-    <!-- HISTORY VIEW -->
     <section id="view-history" style="display:none;">
       <div class="section-heading"><h2>Prediction History</h2><div class="vein"></div></div>
       <div class="panel">
         <div id="fullHistoryList">Loading…</div>
       </div>
     </section>
-
-    <!-- MODEL PERFORMANCE VIEW -->
     <section id="view-model" style="display:none;">
       <div class="section-heading"><h2>Training &amp; Performance</h2><div class="vein"></div></div>
       <div class="charts-grid">
@@ -583,15 +493,12 @@ body {
         <img src="/static/plots/confusion_matrix.png" alt="Confusion matrix" style="max-width:100%; border-radius:var(--radius-sm);" onerror="this.replaceWith(Object.assign(document.createElement('div'),{textContent:'Run train.py to generate this plot.',className:'empty-state'}))">
       </div>
     </section>
-
   </main>
 </div>
-
 <script>
 // ============================================================================
 // LeafScope frontend logic
 // ============================================================================
-
 const dropzone = document.getElementById("dropzone");
 const fileInput = document.getElementById("fileInput");
 const previewWrap = document.getElementById("previewWrap");
@@ -604,16 +511,12 @@ const emptyState = document.getElementById("emptyState");
 const resultContent = document.getElementById("resultContent");
 const errorBanner = document.getElementById("errorBanner");
 const historyStrip = document.getElementById("historyStrip");
-
 let selectedFile = null;
 
-// ---------------------------------------------------------------------------
-// Theme (dark / light)
-// ---------------------------------------------------------------------------
+// Theme toggle
 const themeToggle = document.getElementById("themeToggle");
 const savedTheme = window.__leafscope_theme || "light";
 document.documentElement.setAttribute("data-theme", savedTheme);
-
 themeToggle.addEventListener("click", () => {
   const current = document.documentElement.getAttribute("data-theme");
   const next = current === "dark" ? "light" : "dark";
@@ -621,16 +524,13 @@ themeToggle.addEventListener("click", () => {
   window.__leafscope_theme = next;
 });
 
-// ---------------------------------------------------------------------------
-// Sidebar navigation (view switching)
-// ---------------------------------------------------------------------------
+// Sidebar navigation
 const navLinks = document.querySelectorAll(".nav-link");
 const views = {
   diagnose: document.getElementById("view-diagnose"),
   history: document.getElementById("view-history"),
   model: document.getElementById("view-model"),
 };
-
 navLinks.forEach((link) => {
   link.addEventListener("click", () => {
     navLinks.forEach((l) => l.classList.remove("active"));
@@ -643,35 +543,28 @@ navLinks.forEach((link) => {
     if (target === "model") loadModelCharts();
   });
 });
-
 document.getElementById("menuBtn").addEventListener("click", () => {
   document.getElementById("sidebar").classList.toggle("mobile-open");
 });
 
-// ---------------------------------------------------------------------------
 // Drag & drop / file selection
-// ---------------------------------------------------------------------------
 dropzone.addEventListener("click", () => fileInput.click());
-
 ["dragenter", "dragover"].forEach((evt) =>
   dropzone.addEventListener(evt, (e) => {
     e.preventDefault();
     dropzone.classList.add("dragover");
   })
 );
-
 ["dragleave", "drop"].forEach((evt) =>
   dropzone.addEventListener(evt, (e) => {
     e.preventDefault();
     dropzone.classList.remove("dragover");
   })
 );
-
 dropzone.addEventListener("drop", (e) => {
   const file = e.dataTransfer.files[0];
   if (file) handleFile(file);
 });
-
 fileInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (file) handleFile(file);
@@ -699,9 +592,7 @@ function handleFile(file) {
   };
   reader.readAsDataURL(file);
 }
-
 resetBtn.addEventListener("click", resetUpload);
-
 function resetUpload() {
   selectedFile = null;
   fileInput.value = "";
@@ -710,16 +601,13 @@ function resetUpload() {
   loadingRow.classList.remove("active");
 }
 
-// ---------------------------------------------------------------------------
 // Analyze
-// ---------------------------------------------------------------------------
 const LOADING_MESSAGES = [
   "Analyzing leaf tissue…",
   "Comparing against learned patterns…",
   "Checking for disease signatures…",
   "Generating visual explanation…",
 ];
-
 analyzeBtn.addEventListener("click", async () => {
   if (!selectedFile) {
     showError("Please choose an image first.");
@@ -728,25 +616,20 @@ analyzeBtn.addEventListener("click", async () => {
   hideError();
   analyzeBtn.disabled = true;
   loadingRow.classList.add("active");
-
   let msgIndex = 0;
   loadingText.textContent = LOADING_MESSAGES[0];
   const msgInterval = setInterval(() => {
     msgIndex = (msgIndex + 1) % LOADING_MESSAGES.length;
     loadingText.textContent = LOADING_MESSAGES[msgIndex];
   }, 1400);
-
   const formData = new FormData();
   formData.append("image", selectedFile);
-
   try {
     const res = await fetch("/api/predict", { method: "POST", body: formData });
     const data = await res.json();
-
     if (!res.ok || !data.success) {
       throw new Error(data.error || "Prediction failed.");
     }
-
     renderResult(data);
     prependHistoryItem(data);
   } catch (err) {
@@ -757,7 +640,6 @@ analyzeBtn.addEventListener("click", async () => {
     analyzeBtn.disabled = false;
   }
 });
-
 function showError(msg) {
   errorBanner.textContent = msg;
   errorBanner.style.display = "block";
@@ -766,19 +648,15 @@ function hideError() {
   errorBanner.style.display = "none";
 }
 
-// ---------------------------------------------------------------------------
-// Render result panel
-// ---------------------------------------------------------------------------
+// Render result
 function reliabilityBadgeClass(level) {
   if (level === "High") return "badge-high";
   if (level === "Medium") return "badge-medium";
   return "badge-low";
 }
-
 function renderResult(data) {
   emptyState.style.display = "none";
   resultContent.style.display = "block";
-
   if (data.is_unknown) {
     resultContent.innerHTML = `
       <div class="result-header">
@@ -792,11 +670,9 @@ function renderResult(data) {
     `;
     return;
   }
-
   const info = data.disease_info;
   const badgeClass = reliabilityBadgeClass(data.reliability);
   const sevClass = `severity-${info.severity}`;
-
   const top3Html = data.top_3
     .map(
       (p) => `
@@ -806,12 +682,10 @@ function renderResult(data) {
       </div>`
     )
     .join("");
-
   const listOrNone = (arr) =>
     arr && arr.length
       ? `<ul>${arr.map((s) => `<li>${escapeHtml(s)}</li>`).join("")}</ul>`
       : `<span>Not applicable.</span>`;
-
   const gradcamHtml = data.gradcam_url
     ? `
     <div class="gradcam-toggle">
@@ -823,13 +697,11 @@ function renderResult(data) {
     </div>
   `
     : "";
-
   resultContent.innerHTML = `
     <div class="result-header">
       <div class="result-title">${escapeHtml(info.display_name)}</div>
       <span class="badge ${badgeClass}">${data.reliability} confidence</span>
     </div>
-
     <div class="confidence-bar-track">
       <div class="confidence-bar-fill" id="confBarFill"></div>
     </div>
@@ -837,14 +709,11 @@ function renderResult(data) {
       <span><span class="severity-dot ${sevClass}"></span> Severity: ${info.severity}</span>
       <span>${data.confidence}% confident</span>
     </div>
-
     ${gradcamHtml}
-
     <div style="margin-top:14px;">
       <div style="font-size:0.8rem; font-weight:600; margin-bottom:4px; color:var(--text-muted);">TOP 3 PREDICTIONS</div>
       ${top3Html}
     </div>
-
     <div style="margin-top:10px;">
       ${infoSection("Symptoms", info.symptoms)}
       ${infoSection("Causes", info.causes)}
@@ -854,18 +723,15 @@ function renderResult(data) {
       ${infoSection("Farming Tips", info.farming_tips)}
     </div>
   `;
-
   requestAnimationFrame(() => {
     const fill = document.getElementById("confBarFill");
     if (fill) fill.style.width = data.confidence + "%";
   });
-
   document.querySelectorAll(".info-section-title").forEach((title) => {
     title.addEventListener("click", () => {
       title.parentElement.classList.toggle("open");
     });
   });
-
   const gcButtons = resultContent.querySelectorAll(".gradcam-toggle button");
   gcButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -875,7 +741,6 @@ function renderResult(data) {
       img.src = btn.dataset.mode === "gradcam" ? data.gradcam_url : data.image_url;
     });
   });
-
   function infoSection(title, items) {
     return `
       <div class="info-section">
@@ -887,16 +752,13 @@ function renderResult(data) {
       </div>`;
   }
 }
-
 function escapeHtml(str) {
   const div = document.createElement("div");
   div.textContent = str;
   return div.innerHTML;
 }
 
-// ---------------------------------------------------------------------------
-// History (session strip + full history view)
-// ---------------------------------------------------------------------------
+// History
 function prependHistoryItem(data) {
   if (historyStrip.querySelector(".empty-state")) {
     historyStrip.innerHTML = "";
@@ -909,7 +771,6 @@ function prependHistoryItem(data) {
   `;
   historyStrip.prepend(item);
 }
-
 async function loadFullHistory() {
   const el = document.getElementById("fullHistoryList");
   el.innerHTML = "Loading…";
@@ -939,9 +800,7 @@ async function loadFullHistory() {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Model performance charts
-// ---------------------------------------------------------------------------
+// Model charts
 let chartsLoaded = false;
 async function loadModelCharts() {
   if (chartsLoaded) return;
@@ -949,13 +808,10 @@ async function loadModelCharts() {
     const res = await fetch("/api/model-info");
     const data = await res.json();
     chartsLoaded = true;
-
     const gridColor = "rgba(150,150,150,0.15)";
     Chart.defaults.color = getComputedStyle(document.body).getPropertyValue("--text-muted") || "#666";
-
     if (data.history) {
       const epochs = data.history.accuracy.map((_, i) => i + 1);
-
       new Chart(document.getElementById("accuracyChart"), {
         type: "line",
         data: {
@@ -967,7 +823,6 @@ async function loadModelCharts() {
         },
         options: { scales: { y: { grid: { color: gridColor } }, x: { grid: { color: gridColor } } } },
       });
-
       new Chart(document.getElementById("lossChart"), {
         type: "line",
         data: {
@@ -979,7 +834,6 @@ async function loadModelCharts() {
         },
         options: { scales: { y: { grid: { color: gridColor } }, x: { grid: { color: gridColor } } } },
       });
-
       const dist = data.history.class_distribution || {};
       new Chart(document.getElementById("distributionChart"), {
         type: "bar",
@@ -992,7 +846,6 @@ async function loadModelCharts() {
     } else {
       showNoDataMessage(["accuracyChart", "lossChart", "distributionChart"]);
     }
-
     if (data.classification_report) {
       const classes = Object.keys(data.classification_report).filter(
         (k) => !["accuracy", "macro avg", "weighted avg"].includes(k)
@@ -1010,7 +863,6 @@ async function loadModelCharts() {
     showNoDataMessage(["accuracyChart", "lossChart", "distributionChart", "f1Chart"]);
   }
 }
-
 function showNoDataMessage(ids) {
   ids.forEach((id) => {
     const canvas = document.getElementById(id);
@@ -1024,7 +876,6 @@ function showNoDataMessage(ids) {
     }
   });
 }
-
 </script>
 </body>
 </html>
