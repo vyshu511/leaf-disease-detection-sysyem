@@ -1,10 +1,7 @@
 Flask==3.0.3
-tensorflow-cpu==2.16.1
+gunicorn==21.2.0
+tensorflow-cpu==2.15.0
 numpy==1.26.4
-Pillow==10.4.0
-opencv-python-headless==4.10.0.84
-scikit-learn==1.5.1
-matplotlib==3.9.1
-seaborn==0.13.2
-gunicorn==22.0.0
-Werkzeug==3.0.3
+pillow
+opencv-python
+matplotlib
