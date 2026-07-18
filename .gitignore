@@ -1,1 +1,5 @@
 static/uploads/*git add .
+static/uploads/*
+__pycache__/
+*.pyc
+.env
